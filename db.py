@@ -97,11 +97,20 @@ def write_engines():
 
 
 def main():
+    # make random
     # make_something('engine')
     # make_something('weapon')
     # make_something('hull')
     # make_something('engine')
-    make_something('ship')
+    # make_something('ship')
+
+    # write in var
+    write_weapons()
+    write_hulls()
+    write_ships()
+    write_engines()
+    print(SHIPS)
+    cursor.close()
 
 
 if __name__ == '__main__':
