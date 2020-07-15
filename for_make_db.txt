@@ -1,0 +1,28 @@
+create table ships(
+	ship text primary key,
+	weapon text,
+	hull text,
+	engine text
+);
+create table weapons(
+	weapon text primary key,
+	reload speed integer,
+	rottion speed integer,
+	diametr integer,
+	power volley integer,
+	count integer,
+	FOREIGN KEY (weapon) REFERENCES ships(weapon)
+);
+create table hulls(
+	hull text primary key,
+	armor integer,
+	type integer,
+	capacity integer,
+	FOREIGN KEY (hull) REFERENCES ships(hull)
+);
+create table engines(
+	engine text primary key,
+	power integer,
+	type integer,
+	FOREIGN KEY (engine) REFERENCES ships(engine)
+);
