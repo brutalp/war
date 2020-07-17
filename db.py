@@ -109,7 +109,10 @@ def main():
     write_hulls()
     write_ships()
     write_engines()
-    print(SHIPS)
+    print(ENGINES)
+    print(ENGINES['engine'])
+    q = sorted(ENGINES['engine'], key=lambda e: random.random())
+    print(q)
     cursor.close()
 
 
