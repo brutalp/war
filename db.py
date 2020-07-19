@@ -105,14 +105,10 @@ def main():
     # make_something('ship')
 
     # write in var
-    write_weapons()
-    write_hulls()
-    write_ships()
-    write_engines()
-    print(ENGINES)
-    print(ENGINES['engine'])
-    q = sorted(ENGINES['engine'], key=lambda e: random.random())
-    print(q)
+    # write_weapons()
+    # write_hulls()
+    # write_ships()
+    # write_engines()
     cursor.close()
 
 

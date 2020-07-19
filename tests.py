@@ -79,8 +79,10 @@ def exist_engine(engine):
     return engine in ENGINES['engine']
 
 
-def randomize():
-    print(WEAPONS)
+def compare_ships(ship):
+    print(SHIPS['ship'])
+    print(SHIPS_RANDOM[ship])
+    return True
 
 
 class TestShips(unittest.TestCase):
@@ -99,9 +101,11 @@ class TestShips(unittest.TestCase):
     def test_exist_engine(self):
         self.assertTrue(exist_engine('engine-413'), True)
 
+    def test_compare_ships(self):
+        self.assertTrue(compare_ships('ship-22'), True)
+
 
 if __name__ == '__main__':
     # make_copy_bd()
     unittest.main()
-    # randomize()
     cursor.close()
