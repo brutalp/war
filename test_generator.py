@@ -1,4 +1,4 @@
-from test_without_constants import exist_diameter
+from tests import exist_diameter
 
 
 class TestGenerator(object):

@@ -2,16 +2,70 @@ import unittest
 import sqlite3
 import shutil
 import random
-conn = sqlite3.connect('warships.db')
-cursor = conn.cursor()
-WEAPONS = {}
-HULLS = {}
-SHIPS = {}
-ENGINES = {}
-WEAPONS_RANDOM = {}
-HULLS_RANDOM = {}
-SHIPS_RANDOM = {}
-ENGINES_RANDOM = {}
+connection_bd = sqlite3.connect('warships.db')
+connection_bd_backup = sqlite3.connect(r'C:\backUp\warships.db')
+cursor_bd = connection_bd.cursor()
+cursor_bd_backup = connection_bd_backup.cursor()
+
+
+def shuffle_ships(i):
+    while i > 0:
+        cursor_bd.execute("""SELECT weapon FROM weapons""")
+        weapons = cursor_bd.fetchall()
+        cursor_bd.execute("""SELECT hull FROM hulls""")
+        hulls = cursor_bd.fetchall()
+        cursor_bd.execute("""SELECT engine FROM engines""")
+        engines = cursor_bd.fetchall()
+        cursor_bd.execute("""SELECT ship FROM ships""")
+        ships = cursor_bd.fetchall()
+        # Возможно здесь будет ошибка с получением длины, ошибка вне диапазона
+        ship_random = str(ships[random.randrange(0, len(ships), 1)])[2:-3]
+        cursor_bd.execute("DELETE FROM ships WHERE ship=?", (ship_random,))
+        print(ship_random)
+        cursor_bd.execute("""INSERT INTO ships (ship, weapon, hull, engine)
+                                VALUES (?, ?, ?, ?)""", (ship_random,
+                                                         str(weapons[random.randrange(0, len(weapons), 1)])[2:-3],
+                                                         str(hulls[random.randrange(0, len(hulls), 1)])[2:-3],
+                                                         str(engines[random.randrange(0, len(engines), 1)])[2:-3]))
+        connection_bd.commit()
+        i = i - 1
+
+
+def ship_weapon(ship):
+    result = cursor_bd.execute("SELECT weapon FROM ships WHERE ship=?", (ship,))
+    for var in result:
+        weapon_bd = var[0]
+    result = cursor_bd.execute("SELECT * FROM weapons WHERE weapon=?", (weapon_bd,))
+    for var in result:
+        reload_speed_bd = var[1]
+    return reload_speed_bd
+
+
+def ship_hull_type(ship):
+    result = cursor_bd.execute("SELECT hull FROM ships WHERE ship=?", (ship,))
+    for var in result:
+        hull_bd = var[0]
+    result = cursor_bd.execute("SELECT type FROM hulls WHERE hull=?", (hull_bd,))
+    for var in result:
+        type_bd = var[0]
+    return type_bd
+
+
+def ship_engine_power(ship):
+    result = cursor_bd.execute("SELECT engine FROM ships WHERE ship=?", (ship,))
+    for var in result:
+        engine_bd = var[0]
+    result = cursor_bd.execute("SELECT power FROM engines WHERE engine=?", (engine_bd,))
+    for var in result:
+        power_bd = var[0]
+    return power_bd
+
+
+def ship_engine(ship):
+    result = cursor_bd.execute("SELECT engine FROM ships WHERE ship=?", (ship,))
+    for var in result:
+        engine_bd = var[0]
+    return engine_bd
 
 
 def make_copy_bd():
@@ -19,93 +73,68 @@ def make_copy_bd():
     print('BackUp')
 
 
-def exist_ship(ship):
-    result = cursor.execute("""SELECT * FROM ships""")
+def exist_diameter(arg):
+    exist = False
+    result = cursor_bd.execute("""SELECT diameter FROM weapons""")
     for var in result:
-        SHIPS.setdefault('ship', []).append(var[0])
-        SHIPS.setdefault('weapon', []).append(var[1])
-        SHIPS.setdefault('hull', []).append(var[2])
-        SHIPS.setdefault('engine', []).append(var[3])
-    SHIPS_RANDOM.setdefault('ship', []).append(sorted(SHIPS['ship'], key=lambda e: random.random()))
-    SHIPS_RANDOM.setdefault('weapon', []).append(sorted(SHIPS['weapon'], key=lambda e: random.random()))
-    SHIPS_RANDOM.setdefault('hull', []).append(sorted(SHIPS['hull'], key=lambda e: random.random()))
-    SHIPS_RANDOM.setdefault('engine', []).append(sorted(SHIPS['engine'], key=lambda e: random.random()))
-    print(SHIPS)
-    print(SHIPS_RANDOM)
-    return ship in SHIPS['ship']
+        if var[0] == arg:
+            exist = True
+    return exist
 
 
-def exist_weapon(weapon):
-    result = cursor.execute("""SELECT * FROM weapons""")
+def exist_ship_bd(ship):
+    result = cursor_bd.execute("""SELECT ship FROM ships""")
+    exist = False
     for var in result:
-        WEAPONS.setdefault('weapon', []).append(var[0])
-        WEAPONS.setdefault('reload_speed', []).append(var[1])
-        WEAPONS.setdefault('rotation_speed', []).append(var[2])
-        WEAPONS.setdefault('diameter', []).append(var[3])
-        WEAPONS.setdefault('power_volley', []).append(var[4])
-        WEAPONS.setdefault('count', []).append(var[5])
-    WEAPONS_RANDOM.setdefault('weapon', []).append(sorted(WEAPONS['weapon'], key=lambda e: random.random()))
-    WEAPONS_RANDOM.setdefault('reload_speed', []).append(sorted(WEAPONS['reload_speed'], key=lambda e: random.random()))
-    WEAPONS_RANDOM.setdefault('rotation_speed', []).append(sorted(WEAPONS['rotation_speed'], key=lambda e: random.random()))
-    WEAPONS_RANDOM.setdefault('diameter', []).append(sorted(WEAPONS['diameter'], key=lambda e: random.random()))
-    WEAPONS_RANDOM.setdefault('power_volley', []).append(sorted(WEAPONS['power_volley'], key=lambda e: random.random()))
-    WEAPONS_RANDOM.setdefault('count', []).append(sorted(WEAPONS['count'], key=lambda e: random.random()))
-    return weapon in WEAPONS['weapon']
+        if var[0] == ship:
+            exist = True
+    return exist
 
 
-def exist_hulls(hull):
-    result = cursor.execute("""SELECT * FROM hulls""")
+def exist_ship_backup(ship):
+    result_backup = cursor_bd_backup.execute("""SELECT ship FROM ships""")
+    exist = False
+    for var in result_backup:
+        if var[0] == ship:
+            exist = True
+    return exist
+
+
+def hull_capacity_for_generators():
+    result = cursor_bd.execute("SELECT capacity FROM hulls")
     for var in result:
-        HULLS.setdefault('hull', []).append(var[0])
-        HULLS.setdefault('armor', []).append(var[1])
-        HULLS.setdefault('type', []).append(var[2])
-        HULLS.setdefault('capacity', []).append(var[3])
-    HULLS_RANDOM.setdefault('hull', []).append(sorted(HULLS['hull'], key=lambda e: random.random()))
-    HULLS_RANDOM.setdefault('armor', []).append(sorted(HULLS['armor'], key=lambda e: random.random()))
-    HULLS_RANDOM.setdefault('type', []).append(sorted(HULLS['type'], key=lambda e: random.random()))
-    HULLS_RANDOM.setdefault('capacity', []).append(sorted(HULLS['capacity'], key=lambda e: random.random()))
-    return hull in HULLS['hull']
-
-
-def exist_engine(engine):
-    result = cursor.execute("""SELECT * FROM engines""")
-    for var in result:
-        ENGINES.setdefault('engine', []).append(var[0])
-        ENGINES.setdefault('power', []).append(var[1])
-        ENGINES.setdefault('type', []).append(var[2])
-    ENGINES_RANDOM.setdefault('engine', []).append(sorted(ENGINES['engine'], key=lambda e: random.random()))
-    ENGINES_RANDOM.setdefault('power', []).append(sorted(ENGINES['power'], key=lambda e: random.random()))
-    ENGINES_RANDOM.setdefault('type', []).append(sorted(ENGINES['type'], key=lambda e: random.random()))
-    return engine in ENGINES['engine']
-
-
-def compare_ships(ship):
-    print(SHIPS['ship'])
-    print(SHIPS_RANDOM[ship])
-    return True
+        print(var[0])
 
 
 class TestShips(unittest.TestCase):
-    # def setUp(self):
-    #     self.name = 'ship-22'
+    # make_copy_bd()
+    # shuffle_ships(5)
+    # ship_weapon('ship-22')
+    # hull_capacity_for_generators()
 
-    def test_exist_ship(self):
-        self.assertTrue(exist_ship('ship-22'), True)
+    def test_exist_ship_bd(self):
+        self.assertTrue(exist_ship_bd('ship-22'), True)
 
-    def test_exist_weapon(self):
-        self.assertTrue(exist_weapon('weapon-559'), True)
+    def test_exist_backup(self):
+        self.assertTrue(exist_ship_backup('ship-22'), True)
 
-    def test_exist_hull(self):
-        self.assertTrue(exist_hulls('hull-377'), True)
+    def test_wrong_reload_speed(self):
+        self.assertEqual(ship_weapon('ship-22'), 300)
 
-    def test_exist_engine(self):
-        self.assertTrue(exist_engine('engine-413'), True)
+    def test_reload_speed(self):
+        self.assertEqual(ship_weapon('ship-22'), 298)
 
-    def test_compare_ships(self):
-        self.assertTrue(compare_ships('ship-22'), True)
+    def test_ship_hull_type(self):
+        self.assertEqual(ship_hull_type('ship-22'), 619)
+
+    def test_ship_engine_power(self):
+        self.assertEqual(ship_engine_power('ship-124'), 526)
+
+    def test_ship_engine(self):
+        self.assertEqual(ship_engine('ship-124'), 'engine-736')
 
 
 if __name__ == '__main__':
-    # make_copy_bd()
     unittest.main()
-    cursor.close()
+    cursor_bd.close()
+    cursor_bd_backup.close()
