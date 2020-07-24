@@ -29,7 +29,7 @@ def make_something(some, i):
                         VALUES (?, ?, ?, ?, ?, ?)""", (make_random_text(some),
                                                        random.randrange(0, 999, 1),
                                                        random.randrange(0, 999, 1),
-                                                       random.randrange(0, 999, 1),
+                                                       random.randrange(0, 999, 10),
                                                        random.randrange(0, 999, 1), random.randrange(0, 999, 1)))
             conn.commit()
             print(some)
