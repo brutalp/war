@@ -25,11 +25,11 @@ def make_something(some, i):
                                                  str(engines[random.randrange(0, len(engines), 1)])[2:-3]))
             conn.commit()
         elif some == 'weapon':
-            cursor.execute("""INSERT INTO weapons (weapon, reload_speed, rotation_speed, diameter, power_volley, count)
+            cursor.execute("""INSERT INTO weapons (weapon, reload_speed, rotational_speed, diameter, power_volley, count)
                         VALUES (?, ?, ?, ?, ?, ?)""", (make_random_text(some),
                                                        random.randrange(0, 999, 1),
                                                        random.randrange(0, 999, 1),
-                                                       random.randrange(0, 999, 10),
+                                                       random.randrange(10, 90, 10),
                                                        random.randrange(0, 999, 1), random.randrange(0, 999, 1)))
             conn.commit()
             print(some)
@@ -45,22 +45,20 @@ def make_something(some, i):
             cursor.execute("""INSERT INTO engines (engine, power, type)
                         VALUES (?, ?, ?)""", (make_random_text(some),
                                               random.randrange(0, 999, 1),
-                                              random.randrange(0, 999, 1)))
+                                              random.randrange(0, 999, 10)))
             conn.commit()
             print(some)
         else:
             print('error')
-        cursor.close()
         i = i - 1
 
 
 def main():
     # make random
-    # make_something('engine', 5)
-    # make_something('weapon', 5)
-    # make_something('hull', 5)
-    # make_something('engine', 5)
-    # make_something('ship', 5)
+    make_something('engine', 5)
+    make_something('weapon', 5)
+    make_something('hull', 5)
+    make_something('ship', 5)
     cursor.close()
 
 

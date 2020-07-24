@@ -6,10 +6,10 @@ create table ships(
 );
 create table weapons(
 	weapon text primary key,
-	reload speed integer,
-	rottion speed integer,
-	diametr integer,
-	power volley integer,
+	reload_speed integer,
+	rotational_speed integer,
+	diameter integer,
+	power_volley integer,
 	count integer,
 	FOREIGN KEY (weapon) REFERENCES ships(weapon)
 );

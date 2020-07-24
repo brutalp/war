@@ -107,31 +107,31 @@ def hull_capacity_for_generators():
 
 
 class TestShips(unittest.TestCase):
-    # make_copy_bd()
+    make_copy_bd()
     # shuffle_ships(5)
     # ship_weapon('ship-22')
     # hull_capacity_for_generators()
 
     def test_exist_ship_bd(self):
-        self.assertTrue(exist_ship_bd('ship-22'), True)
+        self.assertTrue(exist_ship_bd('ship-171'), True)
 
     def test_exist_backup(self):
-        self.assertTrue(exist_ship_backup('ship-22'), True)
+        self.assertTrue(exist_ship_backup('ship-171'), True)
 
     def test_wrong_reload_speed(self):
-        self.assertEqual(ship_weapon('ship-22'), 300)
+        self.assertEqual(ship_weapon('ship-171'), 300)
 
     def test_reload_speed(self):
-        self.assertEqual(ship_weapon('ship-22'), 298)
+        self.assertEqual(ship_weapon('ship-171'), 273)
 
     def test_ship_hull_type(self):
-        self.assertEqual(ship_hull_type('ship-22'), 619)
+        self.assertEqual(ship_hull_type('ship-171'), 963)
 
     def test_ship_engine_power(self):
-        self.assertEqual(ship_engine_power('ship-124'), 526)
+        self.assertEqual(ship_engine_power('ship-484'), 812)
 
     def test_ship_engine(self):
-        self.assertEqual(ship_engine('ship-124'), 'engine-736')
+        self.assertEqual(ship_engine('ship-484'), 'engine-798')
 
 
 if __name__ == '__main__':
